@@ -1,0 +1,64 @@
+from tkinter import * #所有 __all__=['a']
+from tkinter import messagebox
+import requests
+
+def get_result():
+    '''爬取有道云翻译'''
+    #获取用户输入的单词
+    content=entry.get()
+    content=content.strip()   #去空格
+    if content=="":
+        messagebox.showinfo('提示','请输入要翻译的内容')
+    else:
+        url='http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule'
+
+        data={}
+        data['i']=content
+        data['from']='AUTO'
+        data['to']='AUTO'
+        data['smartresult']='dict'
+        data['client']='fanyideskweb'
+        #data['salt']=15865958209890
+        #data['sign']='0a17885c466d0f9fc0384410cacd2808'
+        #data['ts']=1586595820989
+        #data['bv']='e2a78ed30c66e16a857c5b6486a1d326'
+        data['doctype']='json'
+        data['version']='2.1'
+        data['keyfrom']='fanyi.web'
+        data['action']='FY_BY_CLICKBUTTION'
+
+        result=requests.post(url,data=data).json()
+        # Response [200] 状态码 请求成功  反爬
+        print(result)
+
+#创建页面
+window = Tk()
+#窗口的标题
+window.title('中英互译')
+#窗口大小 宽 高 width x height+x+y
+window.geometry('370x130+930+430')
+
+#标签控件，font=('微软雅黑', 15),fg='red'
+lable=Label(window,text='输入需要翻译的文字：')
+#显示 网格式的布局 pack 包 place 位置
+lable.grid(row=0,column=0)
+
+lable1=Label(window,text='翻译之后的结果：')
+lable1.grid(row=1,column=0)
+
+#输入控件
+entry=Entry(window,font=('微软雅黑',15))
+entry.grid(row=0,column=1)
+
+entry1=Entry(window,font=('微软雅黑',15))
+entry1.grid(row=1,column=1)
+
+#command 命令
+button=Button(window,text='翻译',width=10,command=get_result)
+#对齐方式:N　Ｓ　Ｅ　Ｗ
+button.grid(row=2,column=0,sticky=W)
+
+button1=Button(window,text='退出',width=10)
+button1.grid(row=2,column=1,sticky=E)
+#消息循环 显示界面
+window.mainloop()
